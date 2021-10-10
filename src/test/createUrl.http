@@ -1,0 +1,18 @@
+### 
+# Create new Short URL 
+POST http://localhost:8080/api/createUrl
+Content-Type: application/json
+
+{
+  "targetUrl": "https://www.coingecko.com"
+}
+
+###
+# Get Target URL by Short URL
+GET http://localhost:8080/FKexy01a7juoB-h
+
+###
+# Get Usage Report by Short Code
+GET http://localhost:8080/report/short-code/?shortCode=FKexy01a7juoB-h
+
+

@@ -1,0 +1,7 @@
+{
+  "name": "static",
+  "version": "1.0.0",
+  "dependencies": {
+    "@uirouter/angularjs": "^1.0.29"
+  }
+}
