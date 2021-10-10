@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Gecko - URL Shortener</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="main.css">
+        <script src="main.js"></script>
+    </head>
+<body>
+<div class="mainDiv">
+    <div class="generateDiv">
+        <h1>Enter a URL to shorten:</h1>
+        <input type="text" id="urlInput" placeholder="http://www.coingecko.com">
+        <br/>
+        <br/>
+        <div class="shortenDiv">
+            <div>
+                <span id="urlTitleLabel"></span>
+                <span id="urlTitle"></span>
+            </div>
+            <div>
+                <span id="targetUrlLabel"></span>
+                <span id="targetUrl"></span>
+            </div>
+            <div>
+                <span id="shortenUrlLabel"></span>
+                <span id="shortenUrl"></span>
+            </div>
+            <div>
+                <span id="shortenCodeLabel"></span>
+                <span id="shortenCode"></span>
+            </div>
+        </div>
+        <button id="shortenUrlBtn" onclick="createNewUrl()">Shorten!</button>        
+    </div>
+    <div class="reportDiv">
+        <h1>View usage report for your short code:</h1>
+        <input type="text" id="shortCodeInput" placeholder="Enter your short code here. Eg: vOyaPBxrGA">
+        <br/>
+        <br/>
+        <button id="reportBtn" onclick="generateUsageReport()">Generate Report!</button>
+        <div id="reportTable">
+            
+        </div>
+    </div>
+</div>
+</body>
+</html>

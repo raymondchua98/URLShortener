@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,9 +21,9 @@ public class ShortenerController {
 	
 	private final UrlEventRepository urlEventRepository;
 	
-	private final String urlFormat = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_-0123456789";
+	private final String urlFormat = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	
-	private final String domain = "localhost:8080";
+	private final String domain = "http://localhost:8080";
 	
 	private static final String[] IP_HEADER_CANDIDATES = {
 			"X-Forwarded-For",
@@ -42,12 +44,14 @@ public class ShortenerController {
 		this.urlEventRepository = urlEventRepository;
 	}
 	
-	@RequestMapping(value = "/{shortUrl}", method = RequestMethod.GET)
-	public ResponseEntity<?> redirectWithParams(@PathVariable String shortUrl, HttpServletRequest request) {
-		if (shortUrl.isEmpty()) {
+	@RequestMapping(value = "/r/{shortCode}", method = RequestMethod.GET)
+	public ResponseEntity<?> redirectWithParams(@PathVariable String shortCode, HttpServletRequest request, HttpServletResponse response) throws IOException {
+		System.out.println("REST to redirect to target URL by shortUrl: " + shortCode);
+		if (shortCode.isEmpty()) {
+			response.sendRedirect(domain);
 			return new ResponseEntity<>("Short URL cannot be empty", HttpStatus.BAD_REQUEST);
 		}
-		Url url = urlRepository.findUrlByUrlCode(shortUrl);
+		Url url = urlRepository.findUrlByUrlCode(shortCode);
 		if (url != null) {
 			if (url.getExpiredDate().isBefore(LocalDateTime.now())) {
 				System.out.println("URL has expired");
@@ -56,18 +60,18 @@ public class ShortenerController {
 			
 			// Insert new URL event
 			LocalDateTime timeStamp = LocalDateTime.now();
-			UrlEvent urlEvent = new UrlEvent(shortUrl + timeStamp, shortUrl, url.getTargetUrl(), getClientIpAddress(request), timeStamp);
+			UrlEvent urlEvent = new UrlEvent(shortCode + timeStamp, shortCode, url.getTargetUrl(), getClientIpAddress(request), timeStamp);
 			urlEventRepository.save(urlEvent);
-			
+			response.sendRedirect(url.getTargetUrl());
 			return new ResponseEntity<>(url.getTargetUrl(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>("No Short URL found", HttpStatus.BAD_REQUEST);
 		}
-		
 	}
 	
 	@PostMapping(path = "/api/createUrl")
 	public Url createUrl(@RequestBody Url newUrl) {
+		System.out.println("REST to create new URL: " + newUrl);
 		System.out.println("Url : " + newUrl);
 		
 		String targetUrl = newUrl.getTargetUrl();
@@ -77,9 +81,9 @@ public class ShortenerController {
 		}
 		
 		// Will generate a short URL of max 15 in size
-		String urlCode = ShortUrlUtils.generateRandomUrl(urlFormat.toCharArray(), 15);
+		String urlCode = ShortUrlUtils.generateRandomUrl(urlFormat.toCharArray(), 10);
 		newUrl.setUrlCode(urlCode);
-		newUrl.setShortUrl(domain + "/" + urlCode);
+		newUrl.setShortUrl(domain + "/r/" + urlCode);
 		newUrl.setUrlTitle(getUrlTitle(targetUrl));
 		newUrl.setExpiredDate(LocalDateTime.now().plusDays(30));
 		// A URL should only be valid for 30 days
@@ -89,19 +93,16 @@ public class ShortenerController {
 	}
 	
 	@RequestMapping(value = "/report/short-code", method = RequestMethod.GET)
-	public String generateShortCodeReport(String shortCode, HttpServletRequest request) {
+	public UrlReport generateShortCodeReport(String shortCode, HttpServletRequest request) {
+		System.out.println("REST to generate usage report by short code: " + shortCode);
 		List<UrlEvent> list = urlEventRepository.findAllByShortCode(shortCode);
 		System.out.println(list.toString());
-		UrlReport urlReport = new UrlReport((long) list.size(), list.get(0).getTargetUrl(), list);
-		StringBuilder report = new StringBuilder(("==== Short URL Report [" + shortCode + "] ====" + "\n"));
-		report.append("Number of Clicks : ").append(urlReport.numberOfClicks).append("\n");
-		report.append("Target URL : ").append(list.get(0).getTargetUrl()).append("\n\n");
-		report.append("====  Access Events ====" + "\n");
-		for (UrlEvent urlEvent: list) {
-			report.append("Accessed IP : ").append(urlEvent.getOriginIp()).append("\n");
-			report.append("Accessed Timestamp : ").append(urlEvent.getTimestamp()).append("\n\n");
+		UrlReport urlReport = new UrlReport(0L, null, null);
+		if(list.size() > 0) {
+			urlReport = new UrlReport((long) list.size(), list.get(0).getTargetUrl(), list);
 		}
-		return report.toString();
+		System.out.println("URL Report: " + urlReport.toString());
+		return urlReport;
 	}
 	
 	private String getUrlTitle(String targetUrl) {
@@ -130,11 +131,9 @@ public class ShortenerController {
 			} else {
 				return "";
 			}
-			
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return "";
+			return ex.getMessage();
 		} 
 	}
 	

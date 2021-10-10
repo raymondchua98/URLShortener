@@ -1,7 +1,32 @@
 {
-  "name": "static",
+  "name": "url.shortener",
   "version": "1.0.0",
   "dependencies": {
-    "@uirouter/angularjs": "^1.0.29"
-  }
+    "@uirouter/angularjs": "^1.0.29",
+    "route-recognizer": "^0.3.4",
+    "router_js": "^7.3.0",
+    "rsvp": "^4.8.5"
+  },
+  "description": "* Your application is deployed with a web interface and a form field that accepts a **Target URL**.  * When the **Target URL** is shortened, the user is returned with a **Short URL**, the **original Target URL** and the **Title tag** of the Target URL.  * A Short URL can be publicly shared and accessed.  * A Short URL path can be in any URI pattern, but should not exceed **a maximum of 15 characters**  * Multiple Short URLs can share the same Target URL.  * You need to produce a simple **usage report** for the application. This report should track the number of **clicks**, originating **geolocation** and **timestamp** of each visit to a **Short URL**.",
+  "main": "src/main/resources/public/main.js",
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raymondchua98/URLShortener.git"
+  },
+  "author": "Raymond",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/raymondchua98/URLShortener/issues"
+  },
+  "homepage": "https://github.com/raymondchua98/URLShortener#readme",
+  "keywords": [
+    "URL",
+    "Shortener"
+  ]
 }
