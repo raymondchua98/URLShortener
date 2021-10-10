@@ -105,8 +105,9 @@ function generateUsageReport() {
             
             table.appendChild(generateHeader("Access History"));
             for (let i = 0; result.urlEvents && i < result.urlEvents.length; i++) {
-                table.appendChild(generateHistoryRow((i+1) + ".","Accessed IP: ", result.urlEvents[i].originIp,));
-                table.appendChild(generateHistoryRow("","Accessed Timestamp: ", result.urlEvents[i].timestamp,));
+                table.appendChild(generateHistoryRow((i+1) + ".","Accessed IP: ", result.urlEvents[i].originIp));
+                table.appendChild(generateHistoryRow("","Origin Location: ", result.urlEvents[i].originGeolocation));
+                table.appendChild(generateHistoryRow("","Accessed Timestamp: ", result.urlEvents[i].timestamp));
             }
         }
 

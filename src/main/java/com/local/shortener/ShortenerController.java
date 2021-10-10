@@ -1,15 +1,20 @@
 package com.local.shortener;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
@@ -60,7 +65,15 @@ public class ShortenerController {
 			
 			// Insert new URL event
 			LocalDateTime timeStamp = LocalDateTime.now();
-			UrlEvent urlEvent = new UrlEvent(shortCode + timeStamp, shortCode, url.getTargetUrl(), getClientIpAddress(request), timeStamp);
+			// For local environment, it will return 0.0.0.0.0.0.0.1. Thus, it is advised to replace the IP with your own IP to get geolocation
+			String clientIp = getClientIpAddress(request);
+			System.out.println(clientIp);
+			if ("0:0:0:0:0:0:0:1".equals(clientIp)) {
+				// Replace your IP here
+				clientIp = "60.52.96.127";
+			}
+			UrlEvent urlEvent = new UrlEvent(shortCode + timeStamp, shortCode, url.getTargetUrl(), clientIp, getGeoLocation(clientIp), timeStamp);
+			System.out.println(urlEvent);
 			urlEventRepository.save(urlEvent);
 			response.sendRedirect(url.getTargetUrl());
 			return new ResponseEntity<>(url.getTargetUrl(), HttpStatus.OK);
@@ -145,5 +158,31 @@ public class ShortenerController {
 			}
 		}
 		return request.getRemoteAddr();
+	}
+	
+	private static String getGeoLocation(String ip) {
+		try {
+			String apiKey = "8f10dfdc3cf44ef7977b5768a57ffee6";
+			String url = "https://api.ipgeolocation.io/ipgeo";
+			String charSet = "UTF-8";
+			String query = String.format("apiKey=%s&ip=%s",
+					URLEncoder.encode(apiKey, charSet),
+					URLEncoder.encode(ip, charSet));
+			
+			URLConnection connection = new URL(url + "?" + query).openConnection();
+			connection.setRequestProperty("Accept-Charset", charSet);
+			InputStream response = connection.getInputStream();
+			try (Scanner scanner = new Scanner(response)) {
+				String responseBody = scanner.useDelimiter("\\A").next();
+				System.out.println(responseBody);
+				ObjectMapper objectMapper = new ObjectMapper();
+				Geolocation geo = objectMapper.readValue(responseBody, Geolocation.class);
+				System.out.println("GeoLocation : " + geo);
+				return(geo.generateOriginGeo());
+			}
+		} catch (Exception ex) {
+			System.out.println(ex.getMessage());
+		}
+		return "";
 	}
 }

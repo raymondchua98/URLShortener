@@ -22,16 +22,19 @@ public class UrlEvent {
 	
 	private String originIp;
 	
+	private String originGeolocation;
+	
 	private LocalDateTime timestamp;
 	
 	public UrlEvent() {
 	}
 	
-	public UrlEvent(String id, String shortCode, String targetUrl, String originIp, LocalDateTime timestamp) {
+	public UrlEvent(String id, String shortCode, String targetUrl, String originIp, String originGeolocation, LocalDateTime timestamp) {
 		this.id = id;
 		this.shortCode = shortCode;
 		this.targetUrl = targetUrl;
 		this.originIp = originIp;
+		this.originGeolocation = originGeolocation;
 		this.timestamp = timestamp;
 	}
 	
@@ -67,6 +70,14 @@ public class UrlEvent {
 		this.originIp = originIp;
 	}
 	
+	public String getOriginGeolocation() {
+		return originGeolocation;
+	}
+	
+	public void setOriginGeolocation(String originGeolocation) {
+		this.originGeolocation = originGeolocation;
+	}
+	
 	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
@@ -82,6 +93,7 @@ public class UrlEvent {
 				", shortCode= " + shortCode +
 				", targetUrl= " + targetUrl +
 				", originIp= " + originIp +
+				", originGeolocation= " + originGeolocation +
 				", timestamp= " + timestamp +
 				']';
 	}
