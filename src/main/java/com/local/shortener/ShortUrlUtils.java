@@ -24,6 +24,9 @@ public final class ShortUrlUtils {
 	};
 	
 	public static String generateRandomUrl(char[] regex, int size) {
+		if (regex.length <= 0 || size <= 0) {
+			return null;
+		}
 		Random random = new SecureRandom();
 
 		final int mask = (2 << (int) Math.floor(Math.log(regex.length - 1) / Math.log(2))) - 1;

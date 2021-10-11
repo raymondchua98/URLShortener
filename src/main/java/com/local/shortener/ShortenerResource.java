@@ -35,7 +35,7 @@ public class ShortenerResource {
 	@RequestMapping(value = "/r/{shortCode}", method = RequestMethod.GET)
 	public ResponseEntity<?> redirectWithParams(@PathVariable String shortCode, HttpServletRequest request, HttpServletResponse response) throws IOException {
 		System.out.println("REST to redirect to target URL by shortUrl: " + shortCode);
-		if (shortCode.isEmpty()) {
+		if (shortCode == null || shortCode.isEmpty()) {
 			response.sendRedirect(Constants.DOMAIN);
 			return new ResponseEntity<>("Short URL cannot be empty", HttpStatus.BAD_REQUEST);
 		}
@@ -58,12 +58,13 @@ public class ShortenerResource {
 	 * Request to create new Url
 	 * @param newUrl
 	 * @return
+	 * @throws Exception
 	 */
 	@PostMapping(path = "/api/createUrl")
-	public Url createUrl(@RequestBody Url newUrl) {
+	public Url createUrl(@RequestBody Url newUrl) throws Exception {
 		System.out.println("REST to create new shortUrl by target URL: " + newUrl);
 		String targetUrl = newUrl.getTargetUrl();
-		if (targetUrl.isEmpty()) {
+		if (targetUrl == null || targetUrl.isEmpty()) {
 			throw new IllegalArgumentException("Target URL cannot be null");
 		}
 		return urlService.createUrl(targetUrl);
@@ -74,9 +75,13 @@ public class ShortenerResource {
 	 * @param shortCode
 	 * @return
 	 */
-	@RequestMapping(value = "/report/short-code", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/report/short-code", method = RequestMethod.GET)
 	public UrlReport generateShortCodeReport(String shortCode) {
 		System.out.println("REST to generate usage report by short code: " + shortCode);
+		if (shortCode == null || shortCode.isEmpty()) {
+			System.out.println("Short code cannot be null");
+			return null;
+		}
 		List<UrlEvent> list = urlEventService.findAllByShortCode(shortCode);
 		
 		UrlReport urlReport = new UrlReport(0L, null, null);

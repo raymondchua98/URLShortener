@@ -68,7 +68,7 @@ function generateUsageReport() {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:8080/report/short-code/?shortCode=" + shortCode, requestOptions)
+        fetch("http://localhost:8080/api/report/short-code/?shortCode=" + shortCode, requestOptions)
             .then(response => response.json())
             .then(result => onSuccess(result))
             .catch(error => onError(error));

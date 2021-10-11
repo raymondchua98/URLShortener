@@ -14,7 +14,6 @@ public class UrlServiceImpl implements UrlService {
 	
 	private final String urlFormat = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	
-	
 	private final UrlRepository urlRepository;
 	
 	public UrlServiceImpl(UrlRepository urlRepository) {
@@ -35,12 +34,16 @@ public class UrlServiceImpl implements UrlService {
 	 * Request to create new Url by target Url
 	 * @param targetUrl
 	 * @return
+	 * @throws Exception
 	 */
 	@Override
-	public Url createUrl(String targetUrl) {
+	public Url createUrl(String targetUrl) throws Exception {
 		// Will generate a short URL of max 10 in size
 		String urlCode = ShortUrlUtils.generateRandomUrl(urlFormat.toCharArray(), 10);
 		
+		if (urlCode == null) {
+			throw new Exception("Generated random short code is null");
+		}
 		// Create a new URL that valid for 30 days
 		Url url = new Url(urlCode, Constants.DOMAIN + "/r/" + urlCode, targetUrl, getUrlTitle(targetUrl), LocalDateTime.now().plusDays(30));
 		

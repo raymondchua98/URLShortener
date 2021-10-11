@@ -12,6 +12,7 @@ public interface UrlService {
 	 * Request to create new Url by target Url
 	 * @param newUrl
 	 * @return
+	 * @throws Exception
 	 */
-	Url createUrl(String newUrl);
+	Url createUrl(String newUrl) throws Exception;
 }
