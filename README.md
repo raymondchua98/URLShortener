@@ -10,7 +10,7 @@
 ## APIs
 The system APIs will be REST APIs
 * `/createUrl(targetUrl)` - Create a new URL in database and return with short URL that lasts for 30 days, URL title etc
-* `"/r/{shortCode}` - Redirect user to target URL by short code and add new access event history
+* `/r/{shortCode}` - Redirect user to target URL by short code and add new access event history
 * `/report/short-code` - Generate usage report for the short code entered
 
 ## Algorithms and Logics
