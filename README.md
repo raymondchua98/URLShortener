@@ -23,7 +23,7 @@ After Short URL is generated, the project will return the Short URL, Target URL 
 Since this system will be using database very often to save / retrieve URLs, the rows of data might go up to millions or billions. Thus, **MongoDB**, a NoSQL Database will be used to ensure scalability of the system.
 
 ## Possible enhancements
-Whenever a user accessed a Short URL, our server will look up in the storage.
-If shortened URL is found in Cache, we will return the data directly instead of searching through database. Else, we will return a message to indicate URL is not found in Cache storage and perform Least Recently Used (LRU) approach to clear off a cache block. 
+Whenever a user accessed a Short URL, our server will look up in the Cache storage.
+If shortened URL is found in Cache storage, we will return the data directly instead of searching through database. Else, we will return a message to indicate URL is not found in Cache storage and perform Least Recently Used (LRU) approach to clear off a cache block. 
 
 
