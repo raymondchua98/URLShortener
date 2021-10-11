@@ -9,36 +9,21 @@
  
 ## APIs
 The system APIs will be REST APIs
-* `createUrl(targetUrl)` - When user passed in a **Target URL**, this function will return a **Short URL**
+* `/createUrl(targetUrl)` - Create a new URL in database and return with short URL that lasts for 30 days, URL title etc
+* `"/r/{shortCode}` - Redirect user to target URL by short code and add new access event history
+* `/report/short-code` - Generate usage report for the short code entered
 
 ## Algorithms and Logics
-To create a short URL, the algorithm applied will be using **Base62** encoding, generating a combination of keys from [A-Z, a-z, 0-9] where the maximum length will be 15 characters. The maximum number of combinations will be 62^15 = ~768,909,704,948,766,668,552,634,368
-
-After a **Short URL** is generated, unlike SQL which we can add UNIQUE index to the column, we will need to purposely retrieve and validate whether the ShortURL had already been assigned to any other URLs which could be a serious problem as system scales. 
-
-To solve it, instead of directly converting the URL which could result in duplicated shortened URL, we can make some modification to the URL. For instance, we can append with the **timestamp of creation** to ensure that the URL can be as unique as possible and reduce the risks of duplications.
-
-To ensure scalability, we can have a counter to keep track of the number of URLs generated. Then, we will concat the counter with the Target URL before we shorten the URL.
-
-> Shortened URL generated will be using a combination of Target URL + Date.now()
-
-> The static Date.now() method returns the number of milliseconds elapsed since January 1, 1970 00:00:00 UTC.
+The system's algorithm to generate Short URL was inspired by [JNanold's](https://github.com/aventrix/jnanoid) approach of using Java's [SecureRandom](https://docs.oracle.com/javase/7/docs/api/java/security/SecureRandom.html) to generate strong random IDs with a proper distribution of characters. The number of random characters is 10, forming a maximum number of 62^10 = 839,299,365,868,340,224 combinations.
+> Regex used is '[A-Z], [a-z], [0-9]'
+ 
+After Short URL is generated, the project will return the Short URL, Target URL Title, Short Code which can be used to view the usage report afterwards. 
 
 ## Database
-Since this system will be using database very often to save / retrieve URLs, the rows of data might go up to millions or billions. Thus, **NoSQL Database** will be used to ensure scalability of the system.
+Since this system will be using database very often to save / retrieve URLs, the rows of data might go up to millions or billions. Thus, **MongoDB**, a NoSQL Database will be used to ensure scalability of the system.
 
-## Cache
-To reduce the need of reading, we can apply Cache to store the created URL. However, cache's size shall be around 20% of the total traffic in order to improve speed and reduce cost. To clear cache when the cache storage is full, we can apply Least Recently Used (LRU) policy to keep track of only the URLs that are often accessed by users. Whenever a cache miss occurs, we will create a new entry in cache storage and kicks out the LRU cache. 
-
-## Redirection Logic
+## Possible enhancements
 Whenever a user accessed a Short URL, our server will look up in the storage.
-
-If shortened URL is found in Cache, we will return the data to server. Else, we will return a message to indicate URL is not found in cache. 
-
-Next, if URL is found in Cache server, we will proceed to verify the shortened URL. If valid, we will pass HTTP 301 to redirect. Else, we will pass HTTP 401 to indicate error.
-
-However, if no URL is found in the Cache, we will look up in the Database storage and update the Cache storage. If found, we will validate the data and redirect accordingly. Else, we will redirect user to homepage and indicate shortened URL is not found.
-
-Upon any successful redirection, we will increase the counter of clicks to keep tracks of how many visits to the Short URL.
+If shortened URL is found in Cache, we will return the data directly instead of searching through database. Else, we will return a message to indicate URL is not found in Cache storage and perform Least Recently Used (LRU) approach to clear off a cache block. 
 
 
