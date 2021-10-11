@@ -2,11 +2,11 @@ function createNewUrl () {
     let targetUrl = document.getElementById("urlInput").value;
     
     // Add protocol if not found
-    if((targetUrl.indexOf("http://") < 0) && (targetUrl.indexOf("https://") < 0)) {
+    if ((targetUrl.indexOf("http://") < 0) && (targetUrl.indexOf("https://") < 0)) {
         targetUrl = "http://" + targetUrl;
     }
     
-    if(targetUrl != null && targetUrl.length > 0 && isValidHttpUrl(targetUrl)) {
+    if (targetUrl != null && targetUrl.length > 0 && isValidHttpUrl(targetUrl)) {
         const myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
 
@@ -27,7 +27,6 @@ function createNewUrl () {
             .catch(error => onError(error));
         
         function onSuccess(result) {
-            console.log(result);
             document.getElementById("urlTitleLabel").innerHTML = "<a>Title of the URL is: </a>";
             document.getElementById("urlTitle").innerHTML = "<a>" + result.urlTitle + "</a>";
             document.getElementById("targetUrlLabel").innerHTML = "<a>Your Target URL is: </a>";
@@ -60,8 +59,8 @@ function createNewUrl () {
 
 function generateUsageReport() {
     var shortCode = document.getElementById("shortCodeInput").value;
-    if(shortCode != null && shortCode.length > 0) {
-        if(shortCode.indexOf("http://localhost:8080/r/") >= 0) {
+    if (shortCode != null && shortCode.length > 0) {
+        if (shortCode.indexOf("http://localhost:8080/r/") >= 0) {
             shortCode = shortCode.substring("http://localhost:8080/r/".length, shortCode.length);
         }
         var requestOptions = {
@@ -75,7 +74,7 @@ function generateUsageReport() {
             .catch(error => onError(error));
 
         function onSuccess(result) {
-            if(result.numberOfClicks > 0) {
+            if (result.numberOfClicks > 0) {
                 generateReportTable(result);
             } else {
                 document.getElementById('reportTable').innerHTML = "No access history found for the entered Short Code.";
@@ -96,7 +95,7 @@ function generateUsageReport() {
             // Adding the entire table to the reportTable div
             document.getElementById('reportTable').appendChild(table);
             let shortCode = document.getElementById("shortCodeInput").value;
-            if(shortCode.indexOf("http://localhost:8080/r/") >= 0) {
+            if (shortCode.indexOf("http://localhost:8080/r/") >= 0) {
                 shortCode = shortCode.substring("http://localhost:8080/r/".length, shortCode.length);
             }
             table.appendChild(generateHeader("Usage Report for: " + shortCode));

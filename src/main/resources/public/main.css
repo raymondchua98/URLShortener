@@ -3,6 +3,35 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+}
+th, td {
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+th {
+	padding-top: 12px;
+	padding-bottom: 12px;
+	text-align: left;
+	background-color: #1a1de0;
+	color: white;
+}
+
+tr:nth-child(odd) {
+	background-color: #0728c1;
+}
+
+tr:nth-child(even) {
+	background-color: #5373ea;
+}
+
 .mainDiv {
 	display: flex;
 	flex-direction: column;
@@ -19,6 +48,10 @@ body {
 
 .generateDiv {
 	margin-bottom: 3rem;
+}
+
+.shortenDiv {
+	text-align: left;
 }
 
 #urlInput, #shortCodeInput {
@@ -49,36 +82,4 @@ body {
 
 #shortenUrl a {
 	color: #d34;
-}
-
-.shortenDiv {
-	text-align: left;
-}
-
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
-	margin-left: auto;
-	margin-right: auto;
-	text-align: left;
-}
-th, td {
-	border: 1px solid #ddd;
-	padding: 8px;
-}
-
-th {
-	padding-top: 12px;
-	padding-bottom: 12px;
-	text-align: left;
-	background-color: #1a1de0;
-	color: white;
-}
-
-tr:nth-child(odd) {
-	background-color: #0728c1;
-}
-
-tr:nth-child(even) {
-	background-color: #5373ea;
 }
