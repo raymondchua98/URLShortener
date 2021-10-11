@@ -10,7 +10,7 @@
 ## APIs
 The system APIs will be REST APIs
 * `/createUrl(targetUrl)` - Create a new URL in database and return with short URL that lasts for 30 days, URL title etc
-* `"/r/{shortCode}` - Redirect user to target URL by short code and add new access event history
+* `/r/{shortCode}` - Redirect user to target URL by short code and add new access event history
 * `/report/short-code` - Generate usage report for the short code entered
 
 ## Algorithms and Logics
@@ -23,7 +23,7 @@ After Short URL is generated, the project will return the Short URL, Target URL 
 Since this system will be using database very often to save / retrieve URLs, the rows of data might go up to millions or billions. Thus, **MongoDB**, a NoSQL Database will be used to ensure scalability of the system.
 
 ## Possible enhancements
-Whenever a user accessed a Short URL, our server will look up in the storage.
-If shortened URL is found in Cache, we will return the data directly instead of searching through database. Else, we will return a message to indicate URL is not found in Cache storage and perform Least Recently Used (LRU) approach to clear off a cache block. 
+Whenever a user accessed a Short URL, our server will look up in the Cache storage.
+If shortened URL is found in Cache storage, we will return the data directly instead of searching through database. Else, we will return a message to indicate URL is not found in Cache storage and perform Least Recently Used (LRU) approach to clear off a cache block. 
 
 
