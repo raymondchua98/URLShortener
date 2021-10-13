@@ -9,10 +9,10 @@ Content-Type: application/json
 
 ###
 # Get Target URL by Short URL
-GET http://localhost:8080/r/XlTctU8lvc
+GET http://localhost:8080/r/XZNaxizAcX
 
 ###
 # Get Usage Report by Short Code
-GET http://localhost:8080/api/report/short-code/?shortCode=ud2JaAJYM0
+GET http://localhost:8080/api/report/short-code/?shortCode=XZNaxizAcX
 
 
