@@ -22,8 +22,25 @@ After Short URL is generated, the project will return the Short URL, Target URL 
 ## Database
 Since this system will be using database very often to save / retrieve URLs, the rows of data might go up to millions or billions. Thus, **MongoDB**, a NoSQL Database will be used to ensure scalability of the system.
 
+## How to deploy
+1. Open cmd and change directory to your desired location
+2. Enter 'git clone https://github.com/raymondchua98/URLShortener.git'
+3. Run 'mvnw spring-boot:run'
+4. Project will be built in your local which is usually localhost:8080
+5. Enjoy
+
+## Dependencies used
+The dependencies files are in pom.xml
+1. junit-platform-launcher
+2. junit-jupiter-api
+3. junit-jupiter-engine
+4. spring-boot-starter-test
+5. spring-boot-starter-web
+6. spring-boot-starter-data-mongodb
+
+## External Service used
+1. IPGeolocation - To capture geo location of originating IP of short url access event
+
 ## Possible enhancements
 Whenever a user accessed a Short URL, our server will look up in the Cache storage.
 If shortened URL is found in Cache storage, we will return the data directly instead of searching through database. Else, we will return a message to indicate URL is not found in Cache storage and perform Least Recently Used (LRU) approach to clear off a cache block. 
-
-
