@@ -22,8 +22,8 @@ After Short URL is generated, the project will return the Short URL, Target URL 
 ## Database
 Since this system will be using database very often to save / retrieve URLs, the rows of data might go up to millions or billions. Thus, **MongoDB**, a NoSQL Database will be used to ensure scalability of the system.
 
-For testing environment, connect through MongoDB Compass with this connection String
-mongodb+srv://root:root@urlshortenercluster0.3lxio.mongodb.net/test?authSource=admin&replicaSet=atlas-1wjy41-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true
+Note: In rare cases where you are unable to connect to the remote database, check if you have any VPN / proxy connection established.
+
 
 ## How to deploy
 1. Open cmd and change directory to your desired location
